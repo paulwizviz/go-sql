@@ -9,6 +9,7 @@ Welcome to my collection of educational materials created by me and others about
 ## Topics
 
 * [SQLite](./docs/sqlite.md)
+* [Postgres](./docs/psql.md)
 
 ## References
 

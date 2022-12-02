@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+
+  sqlitecmd:
+    build:
+      context: ../
+      dockerfile: ./build/sqlite.dockerfile
+      args:
+        GO_VER: 1.18.3
+        OS_VER: ubuntu:22.04
+    image: ${SQLITE_CLI_IMAGE:-go-db/sqlitecmd:current}
+
+  psqlcmd:
+    build:
+      context: ../
+      dockerfile: ./build/psql.dockerfile
+      args:
+        OS_VER: ubuntu:22.04
+    image: ${PSQL_CLI_IMAGE:-go-db/psqlcmd:current}

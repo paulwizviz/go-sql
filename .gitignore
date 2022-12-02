@@ -1,1 +1,5 @@
+# macOS system file
 .DS_Store
+
+# Temporary file
+tmp/

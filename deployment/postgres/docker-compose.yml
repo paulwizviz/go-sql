@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  server:
+    image: postgres:15.1
+    container_name: server
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: psql_db
+    ports:
+      - 5432:5432
+    volumes:
+      - $PWD/tmp/pgdata:/var/lib/postgresql/data
+    networks:
+      - local
+
+networks:
+  local:
+    name: $NETWORK

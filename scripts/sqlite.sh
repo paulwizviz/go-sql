@@ -1,12 +1,12 @@
 #!/bin/bash
 
-export SQLITE_CLI_IMAGE=go-db/sqlitecmd:current
+export SQLITE_CLI_IMAGE=learn-sql/sqlitecmd:current
 export SQLITE_CLI_CONTAINER=sqlitecli
 
 COMMAND="$1"
 
 function build(){
-    docker-compose -f ./build/sqlite/builder.yml build
+    docker-compose -f ./build/builder.yml build sqlitecmd
 }
 
 function clean(){
