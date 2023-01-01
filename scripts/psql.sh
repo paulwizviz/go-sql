@@ -24,12 +24,24 @@ function image(){
 }
 
 function client(){
-    docker run --network=${NETWORK} -v ${PWD}/db/psql/sql:/opt/sql/ -v ${PWD}/db/psql/scripts:/opt/scripts -w /opt -it --rm ${PSQL_CLI_IMAGE} /bin/bash
+    local cmd=$1
+    case $cmd in
+        "cli")
+            docker run --network=${NETWORK} -v ${PWD}/db/psql/sql:/opt/sql/ -v ${PWD}/db/psql/scripts:/opt/scripts -w /opt -it --rm ${PSQL_CLI_IMAGE} /bin/bash
+            ;;
+        *)
+            echo "client [ cli ]"
+            ;;
+    esac
 }
 
 function network(){
-    local state=$1
-    case $state in
+    local cmd=$1
+    case $cmd in
+        "clean")
+            docker-compose -f ./deployment/postgres/docker-compose.yml down
+            rm -rf ./tmp
+            ;;
         "start")
             docker-compose -f ./deployment/postgres/docker-compose.yml up
             ;;
@@ -37,14 +49,19 @@ function network(){
             docker-compose -f ./deployment/postgres/docker-compose.yml down
             ;;
         *)
-            echo "network [ start | stop ]"
+            echo "network [ clean | start | stop ]"
             ;;
     esac
 }
 
 case $COMMAND in
+    "client")
+        client $SUBCOMMAND
+        ;;
     "clean")
-        rm -rf ./tmp
+        network stop
+        network clean
+        image clean
         ;;
     "image")
         image $SUBCOMMAND
@@ -58,7 +75,7 @@ case $COMMAND in
 commands:  
     clean    project setting
     image    build and clean
-    network  start and stop
+    network  clean, start and stop
 "
         ;;
 esac
