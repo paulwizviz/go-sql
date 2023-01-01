@@ -6,7 +6,7 @@ export SQLITE_CLI_CONTAINER=sqlitecli
 COMMAND="$1"
 
 function build(){
-    docker-compose -f ./build/builder.yml build sqlitecmd
+    docker-compose -f ./build/sqlite/builder.yml build
 }
 
 function clean(){

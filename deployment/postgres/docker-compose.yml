@@ -15,6 +15,21 @@ services:
     networks:
       - local
 
+  devops:
+    image: dpage/pgadmin4:6.18
+    container_name: devops
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - 5050:5050
+    depends_on:
+      server:
+        condition: service_started
+    networks:
+      - local
+      
 networks:
   local:
     name: $NETWORK
