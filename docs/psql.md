@@ -83,3 +83,12 @@ psql postgres://[USERNAME]:[PASSWORD]@[HOSTNAME]:[PORT]/[DATABASENAME]?sslmode=r
 
 * STEP 1: Start network `./scripts/psql.sh network start`
 * STEP 2: Open browser `http://localhost:5050/browser/`
+
+### Example 3 - Using client app for DevOp
+
+Please refer to this [script](../db/psql/scripts/testdb.sh)
+
+* STEP 1: Start network `./scripts/psql.sh network start`
+* STEP 2: Open cli `./scripts/psql.sh client cli`
+* STEP 3: In the cli, create db `./scripts/testdb.sh db`
+* STEP 4: In the cli, create schema `./scripts/testdb.sh schema` 
