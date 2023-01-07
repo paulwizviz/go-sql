@@ -2,7 +2,7 @@
 
 export PSQL_CLI_IMAGE=learn-sql/psqlcmd:current
 export PSQL_CLI_CONTAINER=psqlcli
-export NETWORK=learn-sql_postgres
+export NETWORK=learn-sql_psql
 
 COMMAND="$1"
 SUBCOMMAND="$2"

@@ -77,9 +77,9 @@ psql postgres://[USERNAME]:[PASSWORD]@[HOSTNAME]:[PORT]/[DATABASENAME]?sslmode=r
 
 ### Example 2 - Using pgAdmin for DevOp
 
-* email: admin@psql.email
-* password: admin
-* port: 5050
+**email**: admin@psql.email
+**password**: admin
+**port**: 5050
 
 * STEP 1: Start network `./scripts/psql.sh network start`
 * STEP 2: Open browser `http://localhost:5050/browser/`
