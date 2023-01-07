@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+
+  mysqlcmd:
+    build:
+      context: ../../
+      dockerfile: ./build/mysql/mysqlcmd.dockerfile
+      args:
+        OS_VER: 22.04
+    image: ${MYSQL_CLI_IMAGE:-learn-sql/mysqlcmd:current}
