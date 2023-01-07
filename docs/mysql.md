@@ -37,6 +37,9 @@ The working examples provide an Ubuntu based container with mysql client applica
 
 ### Example 1 - Connecting to server via mysql
 
+* STEP 1: Start network `./scripts/mysql.sh network start`
+* STEP 2: Open cli `./scripts/mysql.sh client cli`
+
 ```sh
 mysql -h defaultserver -u root -p
 password:
