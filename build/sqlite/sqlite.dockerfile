@@ -12,11 +12,13 @@ COPY ./go.sum ./go.sum
 COPY ./cmd ./cmd
 
 RUN go mod download && \
-    go build -o ./build/bin/sqlitecmd ./cmd/sqlite/cli
+    go build -o ./build/bin/ex1 ./cmd/sqlite/ex1 && \
+    go build -o ./build/bin/ex2 ./cmd/sqlite/ex2
 
-# App container
-FROM ${OS_VER}
+# Ubuntu container
+FROM ubuntu:${OS_VER}
 
 RUN apt-get update && apt-get install -y libc6-dev
 
-COPY --from=builder /opt/build/bin/sqlitecmd /usr/local/bin/sqlitecmd 
+COPY --from=builder /opt/build/bin/ex1 /usr/local/bin/ex1
+COPY --from=builder /opt/build/bin/ex2 /usr/local/bin/ex2 

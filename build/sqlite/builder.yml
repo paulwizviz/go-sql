@@ -8,5 +8,5 @@ services:
       dockerfile: ./build/sqlite/sqlite.dockerfile
       args:
         GO_VER: 1.18.3
-        OS_VER: ubuntu:22.04
+        OS_VER: 22.04
     image: ${SQLITE_CLI_IMAGE:-go-db/sqlitecmd:current}
