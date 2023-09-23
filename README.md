@@ -13,12 +13,14 @@ Welcome to my collection of educational materials created by me and others about
 
 ## References
 
-* [Official MongoDB Go Doc](https://docs.mongodb.com/drivers/go/current/fundamentals/).
+* [Managing connections](https://go.dev/doc/database/manage-connections)
 
 ## Project structure
 
 * `build` -- scripts used to create apps and containers.
 * `cmd` -- Go code to build apps
+* `deployment` -- docker and/or k8s network
+* `doc` -- markdowns to complement README.md
 * `scripts` -- mainly bash scripts to trigger build and deployment operations.
 
 ## Disclaimers
