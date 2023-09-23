@@ -21,15 +21,15 @@ type Config struct {
 	MaxOpenConn     int
 }
 
-func ConnectMem(maxIdleTm time.Duration, maxLifeTm time.Duration, maxIdleConn int, maxOpenConn int) (*sql.DB, error) {
+func ConnectMem(config Config) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", ":memory:")
 	if err != nil {
 		return nil, fmt.Errorf("%w-%v", ErrConn, err)
 	}
-	db.SetConnMaxIdleTime(maxIdleTm)
-	db.SetConnMaxLifetime(maxLifeTm)
-	db.SetMaxIdleConns(maxIdleConn)
-	db.SetMaxOpenConns(maxOpenConn)
+	db.SetConnMaxIdleTime(config.ConnMaxIdleTime)
+	db.SetConnMaxLifetime(config.ConnMaxLifeTime)
+	db.SetMaxIdleConns(config.MaxIdleConn)
+	db.SetMaxOpenConns(config.MaxOpenConn)
 	return db, nil
 }
 

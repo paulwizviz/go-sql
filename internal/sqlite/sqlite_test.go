@@ -27,7 +27,7 @@ func TestPrepareStmt(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		db, err := ConnectMem(0, 0, 0, 0)
+		db, err := ConnectMem(Config{})
 		if err != nil {
 			t.Fatalf(err.Error())
 		}
@@ -44,7 +44,7 @@ func TestPrepareStmt(t *testing.T) {
 }
 
 func BenchmarkConn(b *testing.B) {
-	for idx, c := range []Config{
+	for idx, config := range []Config{
 		{
 			ConnMaxIdleTime: time.Duration(0),
 			ConnMaxLifeTime: time.Duration(0),
@@ -60,7 +60,7 @@ func BenchmarkConn(b *testing.B) {
 	} {
 		b.Run(fmt.Sprintf("Scenario %d", idx), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
-				ConnectMem(c.ConnMaxIdleTime, c.ConnMaxLifeTime, c.MaxIdleConn, c.MaxOpenConn)
+				ConnectMem(config)
 			}
 		})
 	}
@@ -111,7 +111,7 @@ func BenchmarkCreateTable(b *testing.B) {
 			MaxOpenConn:     4,
 		},
 	} {
-		db, _ := ConnectMem(c.ConnMaxIdleTime, c.ConnMaxLifeTime, c.MaxIdleConn, c.MaxOpenConn)
+		db, _ := ConnectMem(c)
 		b.Run(fmt.Sprintf("Scenario %d", idx), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				var strStmts = []string{
