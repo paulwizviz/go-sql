@@ -14,6 +14,7 @@ Welcome to my collection of educational materials created by me and others about
 ## References
 
 * [Managing connections](https://go.dev/doc/database/manage-connections)
+* [SQLite vs MySQL vs PostgreSQL: A Comparison Of Relational Database Management Systems](https://www.digitalocean.com/community/tutorials/sqlite-vs-mysql-vs-postgresql-a-comparison-of-relational-database-management-systems)
 
 ## Project structure
 

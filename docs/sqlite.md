@@ -1,6 +1,11 @@
 # SQLite
 
-[Offical Documentation](https://www.sqlite.org/index.html)
+This section discusses all things related to SQLite.
+
+## Useful references
+
+* [Offical Documentation](https://www.sqlite.org/index.html)
+* [Connection Strings](https://www.connectionstrings.com/sqlite/)
 
 ## SQLite and Go
 
@@ -15,14 +20,3 @@ When you write Go code interacting with SQL databases you must import two packag
 
 Please refer to [Golang SQLite database/sql](https://earthly.dev/blog/golang-sqlite/) for techniques to get Go to work with SQLite
 
-## Working Examples
-
-A series of examples are built into an [Ubuntu container](../build/sqlite/sqlite.dockerfile)
-
-### Ex1
-
-This example demonstrate simple application to store in SQLite file. [Source](../cmd/sqlite/ex1/main.go)
-
-### Ex2
-
-This example demonstrates primary key constrains error.
