@@ -6,6 +6,7 @@ This section discusses all things related to SQLite.
 
 * [Offical Documentation](https://www.sqlite.org/index.html)
 * [Connection Strings](https://www.connectionstrings.com/sqlite/)
+* [SQLite for Beginners](https://www.youtube.com/watch?v=Wd5WWVx3aRE&list=PLWENznQwkAoxww-cDEfIJ-uuPDfFwbeiJ)
 
 ## Data types
 
