@@ -9,12 +9,20 @@ function build(){
     docker-compose -f ./build/sqlite/builder.yml build
 }
 
+function benchmark(){
+    go test -benchmem -bench=. ./internal/sqlite
+}
+
 function clean(){
+    rm -rf ./internal/sqlite/tmp
     docker rmi -f ${SQLITE_CLI_IMAGE}
     docker rmi -f $(docker images --filter "dangling=true" -q)
 }
 
 case $COMMAND in
+    "benchmark")
+        benchmark
+        ;;
     "build")
         build
         ;;
@@ -25,6 +33,6 @@ case $COMMAND in
         clean
         ;;
     *)
-        echo "$0 [ build | shell | clean ]"
+        echo "$0 [ benchmark | build | shell | clean ]"
         ;;
 esac

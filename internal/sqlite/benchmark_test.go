@@ -30,7 +30,7 @@ func defaulSQLiteFile() string {
 	return path.Join(pwd, "tmp", "sqlite", "data.db")
 }
 
-func BenchmarkCreateTable(b *testing.B) {
+func BenchmarkSQLiteCreateTable(b *testing.B) {
 
 	scenarios := []struct {
 		db     func() *sql.DB
@@ -104,7 +104,7 @@ func BenchmarkCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemPool(defaulSQLiteFile(), 100)
+				db, _ := ConnectFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -113,11 +113,11 @@ func BenchmarkCreateTable(b *testing.B) {
 				MaxIdleConns:    0,
 				MaxOpenConns:    0,
 			},
-			title: "SQLite memory 100 pool",
+			title: "SQLite file",
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemPool(defaulSQLiteFile(), 100)
+				db, _ := ConnectFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -126,11 +126,11 @@ func BenchmarkCreateTable(b *testing.B) {
 				MaxIdleConns:    0,
 				MaxOpenConns:    0,
 			},
-			title: "SQLite memory 100 pool",
+			title: "SQLite file",
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemPool(defaulSQLiteFile(), 100)
+				db, _ := ConnectFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -139,11 +139,11 @@ func BenchmarkCreateTable(b *testing.B) {
 				MaxIdleConns:    0,
 				MaxOpenConns:    0,
 			},
-			title: "SQLite memory 100 pool",
+			title: "SQLite file",
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemPool(defaulSQLiteFile(), 100)
+				db, _ := ConnectFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -152,11 +152,11 @@ func BenchmarkCreateTable(b *testing.B) {
 				MaxIdleConns:    4,
 				MaxOpenConns:    0,
 			},
-			title: "SQLite memory 100 pool",
+			title: "SQLite file",
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemPool(defaulSQLiteFile(), 100)
+				db, _ := ConnectFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -165,7 +165,7 @@ func BenchmarkCreateTable(b *testing.B) {
 				MaxIdleConns:    0,
 				MaxOpenConns:    4,
 			},
-			title: "SQLite memory 100 pool",
+			title: "SQLite file",
 		},
 	}
 

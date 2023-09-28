@@ -26,8 +26,8 @@ func ConnectMemDefault() (*sql.DB, error) {
 	return db, nil
 }
 
-func ConnectMemPool(f string, maxPool int) (*sql.DB, error) {
-	db, err := sql.Open(ver, fmt.Sprintf("Data Source=%s;Pooling=True;Max Pool Size=%d", f, maxPool))
+func ConnectFile(f string) (*sql.DB, error) {
+	db, err := sql.Open(ver, f)
 	if err != nil {
 		return nil, fmt.Errorf("%w-%v", ErrConn, err)
 	}
