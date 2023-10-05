@@ -7,6 +7,7 @@ This section discusses all things related to SQLite.
 * [Offical Documentation](https://www.sqlite.org/index.html)
 * [Connection Strings](https://www.connectionstrings.com/sqlite/)
 * [SQLite for Beginners](https://www.youtube.com/watch?v=Wd5WWVx3aRE&list=PLWENznQwkAoxww-cDEfIJ-uuPDfFwbeiJ)
+* [Building SQLite with CGo for (almost) every OS](https://zig.news/kristoff/building-sqlite-with-cgo-for-every-os-4cic)
 
 ## Data types
 
