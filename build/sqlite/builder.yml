@@ -7,6 +7,6 @@ services:
       context: ../../
       dockerfile: ./build/sqlite/sqlite.dockerfile
       args:
-        GO_VER: 1.18.3
+        GO_VER: bookworm
         OS_VER: 22.04
     image: ${SQLITE_CLI_IMAGE:-go-db/sqlitecmd:current}

@@ -10,6 +10,7 @@ COPY ./go.mod ./go.mod
 COPY ./go.sum ./go.sum
 
 COPY ./cmd ./cmd
+COPY ./internal ./internal
 
 RUN go mod download && \
     go build -o ./build/bin/ex1 ./cmd/sqlite/ex1

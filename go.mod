@@ -1,9 +1,9 @@
-module github.com/paulwizviz/learn-sql
+module learn-sql
 
 go 1.18
 
 require (
-	github.com/mattn/go-sqlite3 v1.14.14
+	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/stretchr/testify v1.8.4
 )
 
