@@ -1,8 +1,18 @@
-#!/bin/bash
+#!/bin/sh
+
+if [ "$(basename $(realpath .))" != "learn-sql" ]; then
+    echo "You are outside the scope of the project"
+    exit 0
+fi
 
 export PSQL_CLI_IMAGE=learn-sql/psqlcmd:current
-export PSQL_CLI_CONTAINER=psqlcli
+export PSQL_CLI_CONTAINER=psqlcli_container
 export NETWORK=learn-sql_psql
+
+export PSQL_VER=16.2-alpine3.19
+export PGADMIN_VER=8.5
+
+export PSQL_VOL=psql_vol
 
 COMMAND="$1"
 SUBCOMMAND="$2"
@@ -15,6 +25,7 @@ function image(){
             ;;
         "clean")
             docker rmi -f ${PSQL_CLI_IMAGE}
+            docker volume rm ${PSQL_VOL}
             docker rmi -f $(docker images --filter "dangling=true" -q)
             ;;
         *)
@@ -40,7 +51,6 @@ function network(){
     case $cmd in
         "clean")
             docker-compose -f ./deployment/postgres/docker-compose.yml down
-            rm -rf ./tmp
             ;;
         "start")
             docker-compose -f ./deployment/postgres/docker-compose.yml up
