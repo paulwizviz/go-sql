@@ -1,4 +1,4 @@
-module learn-sql
+module go-sql
 
 go 1.18
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"learn-sql/internal/sqlite"
+	"go-sql/internal/sqlite"
 )
 
 var (
