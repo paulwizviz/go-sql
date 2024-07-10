@@ -1,6 +1,6 @@
 # Overview
 
-Welcome to my collection of educational materials created by me and others about SQL Database. Included in this project are working examples, mostly writing in Go, and using Docker and Kubernates for executation. If you wish to work with these examples, please install:
+Welcome to my collection of educational materials about SQL Database. Included in this repository are Go based working examples and using Docker and Kubernates for demonstration. If you wish to work with these examples, please install:
 
 * Go version 1.18 or later
 * Docker including compose
