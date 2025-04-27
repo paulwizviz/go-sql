@@ -1,4 +1,4 @@
-# GO SQL: Working Examples and References
+# Go SQL: Working Examples and References
 
 This repository contain references to working examples, educational materials and opinions related to Go programming with SQL.
 
