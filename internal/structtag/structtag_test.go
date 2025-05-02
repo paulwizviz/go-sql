@@ -1,4 +1,4 @@
-package model
+package structtag
 
 import (
 	"fmt"
