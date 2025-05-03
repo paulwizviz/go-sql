@@ -3,3 +3,6 @@
 
 # Temporary file
 tmp/
+
+# DrawIO
+.$*.drawio.bkp
