@@ -13,11 +13,3 @@ func NewDB(username string, password string, host string, port uint, dbname stri
 	}
 	return db, nil
 }
-
-func Ping(db *sql.DB) error {
-	err := db.Ping()
-	if err != nil {
-		return err
-	}
-	return nil
-}

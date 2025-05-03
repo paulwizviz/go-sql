@@ -39,7 +39,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 	}{
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemDefault()
+				db, _ := NewMemDB()
 				return db
 			},
 			config: config{
@@ -52,7 +52,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemDefault()
+				db, _ := NewMemDB()
 				return db
 			},
 			config: config{
@@ -65,7 +65,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemDefault()
+				db, _ := NewMemDB()
 				return db
 			},
 			config: config{
@@ -78,7 +78,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemDefault()
+				db, _ := NewMemDB()
 				return db
 			},
 			config: config{
@@ -91,7 +91,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectMemDefault()
+				db, _ := NewMemDB()
 				return db
 			},
 			config: config{
@@ -104,7 +104,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectFile(defaulSQLiteFile())
+				db, _ := NewDBFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -117,7 +117,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectFile(defaulSQLiteFile())
+				db, _ := NewDBFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -130,7 +130,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectFile(defaulSQLiteFile())
+				db, _ := NewDBFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -143,7 +143,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectFile(defaulSQLiteFile())
+				db, _ := NewDBFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{
@@ -156,7 +156,7 @@ func BenchmarkSQLiteCreateTable(b *testing.B) {
 		},
 		{
 			db: func() *sql.DB {
-				db, _ := ConnectFile(defaulSQLiteFile())
+				db, _ := NewDBFile(defaulSQLiteFile())
 				return db
 			},
 			config: config{

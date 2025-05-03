@@ -4,6 +4,12 @@ This repository contain references to working examples, educational materials an
 
 The materials in this repository were drawn from these [Contributors](https://github.com/paulwizviz/learn-elastic/blob/main/CONTRIBUTORS)
 
+## Topics
+
+* [Data models](./docs/data_model.md)
+* [postgres](./docs/psql.md)
+* [sqlite](./docs/sqlite.md)
+
 ## References
 
 * [Managing connections](https://go.dev/doc/database/manage-connections)

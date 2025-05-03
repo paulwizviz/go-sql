@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"go-sql/internal/sqlite"
+	"go-sql/internal/sqlops"
 )
 
 var (
@@ -52,17 +53,17 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
-	db, err := sqlite.ConnectMemDefault()
+	db, err := sqlite.NewMemDB()
 	if err != nil {
 		log.Fatalf("Connect Error: %v", err)
 	}
 
-	err = sqlite.CreateTable(db, createTableStmtStr)
+	err = sqlops.CreateTable(db, createTableStmtStr)
 	if err != nil {
 		log.Fatalf("Create Table error: %v", err)
 	}
 
-	stmt1, err := sqlite.PrepareStatement(db, insertStmtStr)
+	stmt1, err := sqlops.PrepareStatement(db, insertStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
@@ -73,7 +74,7 @@ func main() {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
-	stmt2, err := sqlite.PrepareStatement(db, selectStmtStr)
+	stmt2, err := sqlops.PrepareStatement(db, selectStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}

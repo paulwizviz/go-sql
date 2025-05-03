@@ -7,7 +7,7 @@ import (
 )
 
 func createTable(input string) error {
-	db, err := ConnectMemDefault()
+	db, err := NewMemDB()
 	if err != nil {
 		return fmt.Errorf("%w-%s", ErrConn, err.Error())
 	}
