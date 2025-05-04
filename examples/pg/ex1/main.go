@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go-sql/internal/pg"
-	"go-sql/internal/sqlops"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -16,9 +15,9 @@ func main() {
 	}
 	defer db.Close()
 
-	err = sqlops.Ping(db)
-	if err != nil {
-		log.Println(err)
+	if err := db.Ping(); err != nil {
+		log.Fatal(err)
 	}
+
 	fmt.Println("Pinging DB")
 }

@@ -6,14 +6,13 @@ import (
 	"log"
 
 	"go-sql/internal/sqlite"
-	"go-sql/internal/sqlops"
 )
 
 var (
 	createTableStmtStr = "CREATE TABLE IF NOT EXISTS lottery(ball1 INT, ball2 INT)"
 	insertStmtStr      = "INSERT INTO lottery (ball1, ball2) VALUES (?,?)"
 	selectStmtStr      = "SELECT * FROM lottery WHERE ball1=? AND ball2=?"
-	deleteTableStmtStr = "DROP TABLE lottery"
+	dropTableStmtStr   = "DROP TABLE lottery"
 )
 
 func insertStatement(stmt *sql.Stmt, args []int) error {
@@ -57,12 +56,11 @@ func main() {
 		log.Fatalf("Connect Error: %v", err)
 	}
 
-	err = sqlops.CreateTable(db, createTableStmtStr)
-	if err != nil {
-		log.Fatalf("Create Table error: %v", err)
+	if _, err := db.Exec(createTableStmtStr); err != nil {
+		log.Fatalf("Create table error: %v", err)
 	}
 
-	stmt1, err := sqlops.PrepareStatement(db, insertStmtStr)
+	stmt1, err := db.Prepare(insertStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
@@ -73,7 +71,7 @@ func main() {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
-	stmt2, err := sqlops.PrepareStatement(db, selectStmtStr)
+	stmt2, err := db.Prepare(selectStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
@@ -84,8 +82,7 @@ func main() {
 		log.Fatalf("Select query error: %v", err)
 	}
 
-	err = sqlops.DeleteTable(db, deleteTableStmtStr)
-	if err != nil {
-		log.Fatal("Droping table")
+	if _, err := db.Exec(dropTableStmtStr); err != nil {
+		log.Fatalf("Drop table error: %v", err)
 	}
 }

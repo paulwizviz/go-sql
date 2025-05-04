@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"go-sql/internal/pg"
-	"go-sql/internal/sqlops"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -59,12 +58,11 @@ func main() {
 	}
 	defer db.Close()
 
-	err = sqlops.CreateTable(db, createTableStmtStr)
-	if err != nil {
-		log.Fatalf("Create Table error: %v", err)
+	if _, err := db.Exec(createTableStmtStr); err != nil {
+		log.Fatalf("Create table error: %v", err)
 	}
 
-	stmt1, err := sqlops.PrepareStatement(db, insertStmtStr)
+	stmt1, err := db.Prepare(insertStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
@@ -75,7 +73,7 @@ func main() {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
-	stmt2, err := sqlops.PrepareStatement(db, selectStmtStr)
+	stmt2, err := db.Prepare(selectStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
@@ -86,8 +84,7 @@ func main() {
 		log.Fatalf("Select query error: %v", err)
 	}
 
-	err = sqlops.DeleteTable(db, dropTableStmtStr)
-	if err != nil {
+	if _, err := db.Exec(dropTableStmtStr); err != nil {
 		log.Fatalf("Drop table error: %v", err)
 	}
 }
