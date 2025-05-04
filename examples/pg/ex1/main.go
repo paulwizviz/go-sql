@@ -15,6 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
 	err = sqlops.Ping(db)
 	if err != nil {
 		log.Println(err)

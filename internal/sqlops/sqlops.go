@@ -26,6 +26,14 @@ func CreateTable(db *sql.DB, stmt string) error {
 	return nil
 }
 
+func DeleteTable(db *sql.DB, stmt string) error {
+	_, err := db.Exec(stmt)
+	if err != nil {
+		return fmt.Errorf("%w-%v", ErrTable, err)
+	}
+	return nil
+}
+
 func PrepareStatement(db *sql.DB, query string) (*sql.Stmt, error) {
 	stmt, err := db.Prepare(query)
 	if err != nil {

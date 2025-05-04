@@ -3,17 +3,18 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"go-sql/internal/pg"
+	"go-sql/internal/sqlops"
 	"log"
 
-	"go-sql/internal/sqlite"
-	"go-sql/internal/sqlops"
+	_ "github.com/lib/pq"
 )
 
 var (
 	createTableStmtStr = "CREATE TABLE IF NOT EXISTS lottery(ball1 INT, ball2 INT)"
-	insertStmtStr      = "INSERT INTO lottery (ball1, ball2) VALUES (?,?)"
-	selectStmtStr      = "SELECT * FROM lottery WHERE ball1=? AND ball2=?"
-	deleteTableStmtStr = "DROP TABLE lottery"
+	insertStmtStr      = "INSERT INTO lottery (ball1, ball2) VALUES ($1,$2)"
+	selectStmtStr      = "SELECT * FROM lottery WHERE ball1=$1 AND ball2=$2"
+	dropTableStmtStr   = "DROP TABLE lottery"
 )
 
 func insertStatement(stmt *sql.Stmt, args []int) error {
@@ -52,10 +53,11 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
-	db, err := sqlite.NewMemDB()
+	db, err := pg.NewDB("postgres", "postgres", "localhost", 5432, "default")
 	if err != nil {
-		log.Fatalf("Connect Error: %v", err)
+		log.Fatal(err)
 	}
+	defer db.Close()
 
 	err = sqlops.CreateTable(db, createTableStmtStr)
 	if err != nil {
@@ -84,8 +86,8 @@ func main() {
 		log.Fatalf("Select query error: %v", err)
 	}
 
-	err = sqlops.DeleteTable(db, deleteTableStmtStr)
+	err = sqlops.DeleteTable(db, dropTableStmtStr)
 	if err != nil {
-		log.Fatal("Droping table")
+		log.Fatalf("Drop table error: %v", err)
 	}
 }
