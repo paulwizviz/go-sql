@@ -6,7 +6,7 @@ The materials in this repository were drawn from these [Contributors](https://gi
 
 ## Topics
 
-* [Data models](./docs/data_model.md)
+* [Data Schema](./docs/schema.md)
 * [SQL Statements](./docs/sql.md)
 * [Working Examples](./docs/working_examples.md)
 
