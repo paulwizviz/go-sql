@@ -2,50 +2,21 @@ package sqlops
 
 import (
 	"database/sql"
-	"errors"
-	"fmt"
 )
 
-var (
-	ErrConn  = errors.New("db connect error")
-	ErrStmt  = errors.New("statement error")
-	ErrTable = errors.New("create table error")
-)
-
-type Entity any
-
+// SQLTableCreator is an interface to database creation
 type SQLTableCreator interface {
-	Create(db *sql.DB, entities ...Entity) *sql.Stmt
+	Create(*sql.DB) error
 }
 
-func CreateTable(db *sql.DB, stmt string) error {
-	_, err := db.Exec(stmt)
-	if err != nil {
-		return fmt.Errorf("%w-%v", ErrTable, err)
-	}
-	return nil
+// SQLTableCreatorFunc is a functional implementation of SQLTableCreator interface
+type SQLTableCreatorFunc func(*sql.DB) error
+
+func (s SQLTableCreatorFunc) Create(db *sql.DB) error {
+	return s(db)
 }
 
-func DeleteTable(db *sql.DB, stmt string) error {
-	_, err := db.Exec(stmt)
-	if err != nil {
-		return fmt.Errorf("%w-%v", ErrTable, err)
-	}
-	return nil
-}
-
-func PrepareStatement(db *sql.DB, query string) (*sql.Stmt, error) {
-	stmt, err := db.Prepare(query)
-	if err != nil {
-		return nil, fmt.Errorf("%v-%v", ErrStmt, err)
-	}
-	return stmt, nil
-}
-
-func Ping(db *sql.DB) error {
-	err := db.Ping()
-	if err != nil {
-		return err
-	}
-	return nil
+// CreateTable is an operation to create table table
+func CreateTable(creator SQLTableCreator, db *sql.DB) error {
+	return creator.Create(db)
 }

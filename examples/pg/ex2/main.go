@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"go-sql/internal/pg"
+	"go-sql/internal/sqlops"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -52,7 +52,7 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
-	db, err := pg.NewDB("postgres", "postgres", "localhost", 5432, "default")
+	db, err := sqlops.NewPGConn("postgres", "postgres", "localhost", 5432, "default")
 	if err != nil {
 		log.Fatal(err)
 	}

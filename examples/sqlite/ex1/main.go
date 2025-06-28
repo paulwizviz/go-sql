@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"go-sql/internal/sqlite"
+	"go-sql/internal/sqlops"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
@@ -51,7 +53,7 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
-	db, err := sqlite.NewMemDB()
+	db, err := sqlops.NewSQLiteMem()
 	if err != nil {
 		log.Fatalf("Connect Error: %v", err)
 	}

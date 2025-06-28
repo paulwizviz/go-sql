@@ -7,8 +7,8 @@ The materials in this repository were drawn from these [Contributors](https://gi
 ## Topics
 
 * [Data models](./docs/data_model.md)
-* [postgres](./docs/psql.md)
-* [sqlite](./docs/sqlite.md)
+* [SQL Statements](./docs/sql.md)
+* [Working Examples](./docs/working_examples.md)
 
 ## References
 
