@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // SQLType represents a variant of a SQL base
@@ -41,9 +43,7 @@ func DriverType(db *sql.DB) SQLType {
 }
 
 var (
-	ErrConn  = errors.New("db connect error")
-	ErrStmt  = errors.New("statement error")
-	ErrTable = errors.New("create table error")
+	ErrConn = errors.New("db connect error")
 )
 
 const (
@@ -73,7 +73,7 @@ func NewPGConn(username string, password string, host string, port uint, dbname 
 	connStmt := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, username, password, dbname)
 	db, err := sql.Open("postgres", connStmt)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w-%v", ErrConn, err)
 	}
 	return db, nil
 }

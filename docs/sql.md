@@ -1,6 +1,9 @@
 # SQL Syntax
 
-## Database Type Differences:
+* [Types Differences](#database-type-differences)
+* [Statement Parameter Binding](#statement-parameter-binding)
+
+## Database Type Differences
 
 Understanding the differences in SQL concepts and data types across various database systems (SQLite, PostgreSQL, MySQL) is crucial for writing portable and efficient SQL operations. Below is a summary:
 
