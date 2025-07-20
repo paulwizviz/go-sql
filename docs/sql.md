@@ -23,3 +23,19 @@ Understanding the differences in SQL concepts and data types across various data
 | SQLite. | ? | ?N  | :name, @name, $name. | Yes (often supports all) |
 | MySQL | ? | No | No | Yes (common in client libraries) |
 | PostgreSQL | No | $N | No | Yes (common in client libraries) |
+
+## Drivers
+
+Here's a list of some of the most common relational databases and their popular Go drivers that fully support the database/sql transaction model:
+
+* **PostgreSQL**:
+  * `github.com/lib/pq` (older, but widely used)
+  * `github.com/jackc/pgx/v5` (more modern, feature-rich, often preferred now)
+* **MySQL / MariaDB**:
+  * `github.com/go-sql-driver/mysql`
+* **SQLite**:
+  * `github.com/mattn/go-sqlite3`
+* **Microsoft SQL Server**:
+  * `github.com/denisenkom/go-mssqldb`
+* **Oracle Database**:
+  * `github.com/go-godbc/godbc` (or other commercial/community drivers)
