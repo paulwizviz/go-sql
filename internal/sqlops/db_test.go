@@ -3,12 +3,14 @@ package sqlops_test
 import (
 	"database/sql"
 	"fmt"
-	"go-sql/internal/sqlops"
 	"testing"
 
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/stretchr/testify/assert"
+
+	"go-sql/internal/sqlops"
 )
 
 func TestDriverType(t *testing.T) {

@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 // SQLType represents a variant of a SQL base
