@@ -11,5 +11,5 @@ To run these working examples, you will need to run an instance of Postgres, you
 
 ## SQLite Working Examples
 
-* [Example 1](../examples/sqlite/ex1/main.go) - demonstrates steps to create, insert and query in memory database.
+* [Example 1](../examples/sqlite/ex1/main.go) - demonstrates steps to create, insert and query in memory database using raw Go SQL driver
 * [Example 2](../examples/sqlite/ex2/main.go) - demonstrates the use of transactions in memory database.

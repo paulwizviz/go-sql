@@ -17,7 +17,7 @@ var (
 	dropTableStmtStr   = "DROP TABLE lottery"
 )
 
-func insertStatement(stmt *sql.Stmt, args []int) error {
+func execInsertStmt(stmt *sql.Stmt, args []int) error {
 	r, err := stmt.Exec(args[0], args[1])
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func insertStatement(stmt *sql.Stmt, args []int) error {
 	return nil
 }
 
-func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
+func execSelectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 	rows, err := stmt.Query(arg1, arg2)
 	if err != nil {
 		return err
@@ -53,37 +53,46 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
+	// Instantiate a DB
 	db, err := sqlops.NewSQLiteMem()
 	if err != nil {
 		log.Fatalf("Connect Error: %v", err)
 	}
 
+	// Creating Tables
 	if _, err := db.Exec(createTableStmtStr); err != nil {
 		log.Fatalf("Create table error: %v", err)
 	}
 
+	// Create statement to insert into table
 	stmt1, err := db.Prepare(insertStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
 	defer stmt1.Close()
 
-	err = insertStatement(stmt1, []int{1, 2})
+	// Execute Insert Statement to inset values
+	// 1 and 2
+	err = execInsertStmt(stmt1, []int{1, 2})
 	if err != nil {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
+	// Prepare query statment to select result when
+	// two values are matched
 	stmt2, err := db.Prepare(selectStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
 	defer stmt2.Close()
 
-	err = selectQuery(stmt2, 1, 2)
+	// Execute query statement
+	err = execSelectQuery(stmt2, 1, 2)
 	if err != nil {
 		log.Fatalf("Select query error: %v", err)
 	}
 
+	// Execute statement to drop tables
 	if _, err := db.Exec(dropTableStmtStr); err != nil {
 		log.Fatalf("Drop table error: %v", err)
 	}
