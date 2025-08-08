@@ -18,7 +18,7 @@ type TblCreatorTx interface {
 	Create(context.Context, *sql.Tx) error
 }
 
-// TblCreatorTxFunc is a functional implementation of SQLTableCreator
+// TblCreatorTxFunc is a functional implementation of TblCreatorTx
 // interface
 type TblCreatorTxFunc func(context.Context, *sql.Tx) error
 
