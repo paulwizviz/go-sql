@@ -47,3 +47,96 @@ var (
 		return nil
 	}
 )
+
+func SQLiteCreateTable(ctx context.Context, db *sql.DB) error {
+	return sqlops.CreateTableTx(
+		ctx,
+		db,
+		SQLiteCreatePersonTxFn,
+		SQLiteCreateNamedIDTxFn,
+		SQLiteCreatePersonNameIDTxFn)
+}
+
+func SQLiteInsertName(ctx context.Context, db *sql.DB) error {
+
+	var stmts []*sql.Stmt
+
+	insertPersonStmt, err := db.PrepareContext(ctx, SQLiteInsertPersonSQL)
+	if err != nil {
+		return err
+	}
+	defer insertPersonStmt.Close()
+	stmts = append(stmts, insertPersonStmt)
+
+	insertNameIDStmt, err := db.PrepareContext(ctx, SQLiteInsertNamedIDSQL)
+	if err != nil {
+		return err
+	}
+	defer insertNameIDStmt.Close()
+	stmts = append(stmts, insertNameIDStmt)
+
+	insertPersonNameIDStmt, err := db.PrepareContext(ctx, SQLiteInsertPersonNameIDSQL)
+	if err != nil {
+		return err
+	}
+	defer insertPersonNameIDStmt.Close()
+	stmts = append(stmts, insertPersonNameIDStmt)
+
+	firstName := "John"
+	middleName := ""
+	surname := "Doe"
+	err = insertNames(ctx, db, stmts, firstName, middleName, surname)
+	if err != nil {
+		return fmt.Errorf("unable to insert name: %v", err)
+	}
+	return nil
+}
+
+func insertNames(
+	ctx context.Context,
+	db *sql.DB,
+	stmt []*sql.Stmt,
+	firstName string,
+	middleName string,
+	surname string) error {
+
+	tx, err := db.BeginTx(ctx, &sql.TxOptions{
+		Isolation: sql.LevelDefault,
+	})
+	if err != nil {
+		return fmt.Errorf("execute statements: %v", err)
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	result, err := tx.StmtContext(ctx, stmt[0]).ExecContext(ctx)
+	if err != nil {
+		return fmt.Errorf("execute statement: %v", err)
+	}
+
+	personID, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("obtain person id: %v", err)
+	}
+
+	result, err = tx.StmtContext(ctx, stmt[1]).ExecContext(ctx, firstName, middleName, surname)
+	if err != nil {
+		return fmt.Errorf("insert name error: %v", err)
+	}
+
+	nameID, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("obtain named id: %v", err)
+	}
+
+	_, err = tx.StmtContext(ctx, stmt[2]).ExecContext(ctx, personID, nameID)
+	if err != nil {
+		return fmt.Errorf("insert ")
+	}
+
+	return tx.Commit()
+}
