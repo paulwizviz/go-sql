@@ -1,9 +1,6 @@
 # Working Examples
 
 * [Local Data Model](#logical-data-model)
-* [Phyical Data Model](#physical-data-model)
-* [PostgreSQL Working Examples](#postgresql-working-examples)
-* [SQLite Working Examples](#sqlite-working-examples)
 
 ## Logical Data Model
 

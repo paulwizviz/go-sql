@@ -1,12 +1,11 @@
 # Go SQL: Working Examples and References
 
-This repository contains references to educational materials, opinions and working examples related to Go programming with SQL.
+This repository provides educational materials, opinions, and working examples for Go programming with SQL.
 
 The materials in this repository are contributed by the people listed in the [Contributors](https://github.com/paulwizviz/learn-elastic/blob/main/CONTRIBUTORS) file.
 
 ## Topics
 
-* [Data Schema](./docs/schema.md)
 * [SQL Statements](./docs/sql.md)
 * [Transactions](./docs/txn.md)
 * [Working Examples](./docs/working_examples.md)
