@@ -11,6 +11,10 @@ The materials in this repository are contributed by the people listed in the [Co
 * Data Migration
   * [Goose](./docs/goose.md)
 
+## Companion Project
+
+The [companion project](https://github.com/paulwizviz/learn-sql) to support this project. Use the companion project to instantiate a Postgres server.
+
 ## References
 
 * [Managing connections](https://go.dev/doc/database/manage-connections)
