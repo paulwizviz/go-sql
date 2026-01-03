@@ -52,38 +52,57 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
+
+	// STEP 1: Establish connection to Postgres server
 	db, err := sqlops.NewPGConn("postgres", "postgres", "localhost", 5432, "default")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
+	// STEP 6: Close connection
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	// STEP 2: Create Table
 	if _, err := db.Exec(createTableStmtStr); err != nil {
 		log.Fatalf("Create table error: %v", err)
 	}
 
+	// STEP 3: Insert statement
+	// STEP 3a: Prepare insert statement
 	stmt1, err := db.Prepare(insertStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
-	defer stmt1.Close()
 
-	err = insertStatement(stmt1, []int{1, 2})
-	if err != nil {
+	// STEP 3b: Execute insert statement
+	if err = insertStatement(stmt1, []int{1, 2}); err != nil {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
+	if err := stmt1.Close(); err != nil {
+		log.Fatal(err)
+	}
+
+	// STEP 4: SELECT statement
+	// STEP 4a: Prepare select statement
 	stmt2, err := db.Prepare(selectStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
-	defer stmt2.Close()
-
-	err = selectQuery(stmt2, 1, 2)
-	if err != nil {
+	// STEP 4b: Execute select statement
+	if err := selectQuery(stmt2, 1, 2); err != nil {
 		log.Fatalf("Select query error: %v", err)
 	}
 
+	if err := stmt2.Close(); err != nil {
+		log.Fatal(err)
+	}
+
+	// STEP 5: Drop Table
 	if _, err := db.Exec(dropTableStmtStr); err != nil {
 		log.Fatalf("Drop table error: %v", err)
 	}

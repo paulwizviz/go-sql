@@ -53,7 +53,8 @@ func execSelectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 }
 
 func main() {
-	// Instantiate a DB
+
+	// Instantiate a DB server in memory
 	db, err := sqlops.NewSQLiteMem()
 	if err != nil {
 		log.Fatalf("Connect Error: %v", err)
@@ -69,13 +70,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
-	defer stmt1.Close()
 
 	// Execute Insert Statement to inset values
 	// 1 and 2
-	err = execInsertStmt(stmt1, []int{1, 2})
-	if err != nil {
+	if err := execInsertStmt(stmt1, []int{1, 2}); err != nil {
 		log.Fatalf("Insert execution error: %v", err)
+	}
+
+	if err := stmt1.Close(); err != nil {
+		log.Fatal(err)
 	}
 
 	// Prepare query statment to select result when
@@ -84,12 +87,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
-	defer stmt2.Close()
 
 	// Execute query statement
-	err = execSelectQuery(stmt2, 1, 2)
-	if err != nil {
+	if err := execSelectQuery(stmt2, 1, 2); err != nil {
 		log.Fatalf("Select query error: %v", err)
+	}
+
+	if err := stmt2.Close(); err != nil {
+		log.Fatal(err)
 	}
 
 	// Execute statement to drop tables

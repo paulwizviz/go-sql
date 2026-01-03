@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	// Instantiate SQLite DB
+	// Instantiate SQLite DB in memory
 	db, err := sqlops.NewSQLiteMem()
 	if err != nil {
 		log.Fatalf("Connection error: %v", err)
@@ -21,13 +21,11 @@ func main() {
 	ctx := context.Background()
 
 	// SQLite create table
-	err = person.SQLiteCreateTable(ctx, db)
-	if err != nil {
+	if err := person.SQLiteCreateTable(ctx, db); err != nil {
 		log.Fatalf("Create table error: %v", err)
 	}
 
-	err = person.SQLiteInsertName(ctx, db)
-	if err != nil {
+	if err := person.SQLiteInsertName(ctx, db); err != nil {
 		log.Fatalf("Insert name error: %v", err)
 	}
 
