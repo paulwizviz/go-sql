@@ -6,3 +6,6 @@ tmp/
 
 # DrawIO
 .$*.drawio.bkp
+
+# SQLite files
+sqlite.db
