@@ -8,6 +8,7 @@ The materials in this repository are contributed by the people listed in the [Co
 
 * [SQL Statements](./docs/sql.md)
 * [Transactions](./docs/txn.md)
+* [Coding](./docs/code.md)
 * Data Migration
   * [Goose](./docs/goose.md)
 

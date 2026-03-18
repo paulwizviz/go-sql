@@ -61,7 +61,7 @@ The database schema is specified across these files:
 
 The steps to run the cli is [embedded in this script](../examples/goose/pg/ex1/script.sh).
 
-## Working Example 2: Basic Go Migration
+### Working Example 2: Basic Go Migration
 
 In this example, we are writing Go application to execute schema migration. The migration files are here:
 
@@ -69,3 +69,7 @@ In this example, we are writing Go application to execute schema migration. The 
 * [Migration in Go rename column](../examples/goose/pg/ex2/2026010218302_rename_column.go)
 
 This is the [main routine](../examples/goose/pg/ex2/main.go). To run the process, you need to build an executable.
+
+## SQLite
+
+Here my notes on the use of Goose to migrate SQL Schema.

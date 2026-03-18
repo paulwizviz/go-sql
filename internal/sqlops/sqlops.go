@@ -5,13 +5,14 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log/slog"
 )
 
 var (
-	ErrDB    = errors.New("DB error")
-	ErrStmt  = errors.New("statement error")
-	ErrTable = errors.New("create table")
-	ErrTxn   = errors.New("transaction error")
+	ErrDB          = errors.New("db error")
+	ErrCreateTable = errors.New("create table error")
+	ErrPrepareStmt = errors.New("prepare statement error")
+	ErrTx          = errors.New("transaction error")
 )
 
 // TblCreatorTxFunc is the idiomatic way to handle a function callback.
@@ -26,7 +27,7 @@ func CreateTableTx(ctx context.Context, db *sql.DB, creators ...TblCreatorTxFunc
 		Isolation: sql.LevelDefault,
 	})
 	if err != nil {
-		return fmt.Errorf("%w: begin transaction failed: %w", ErrTxn, err)
+		return fmt.Errorf("%w: %v", ErrTx, err)
 	}
 
 	// This defer correctly captures the named return variable 'err'.
@@ -40,7 +41,7 @@ func CreateTableTx(ctx context.Context, db *sql.DB, creators ...TblCreatorTxFunc
 	for _, creator := range creators {
 		// Assigning the error to the named return variable 'err'.
 		if err = creator(ctx, tx); err != nil {
-			return fmt.Errorf("%w: creating table: %w", ErrTable, err)
+			return fmt.Errorf("%w: %v", ErrCreateTable, err)
 		}
 	}
 
@@ -49,56 +50,49 @@ func CreateTableTx(ctx context.Context, db *sql.DB, creators ...TblCreatorTxFunc
 	return tx.Commit()
 }
 
-type StmtWriter struct {
-	stmt *sql.Stmt
-}
+type RowWriterFunc func(context.Context, *sql.Tx, *sql.Stmt, any) (any, error)
 
-func (s *StmtWriter) Exec(ctx context.Context, args ...any) error {
-	_, err := s.stmt.ExecContext(ctx, args...)
+func Writer(ctx context.Context, db *sql.DB, rawStmt string, dataList []any, rowWriter RowWriterFunc) ([]any, error) {
+	if len(dataList) == 0 {
+		return nil, nil
+	}
+
+	tx, err := db.BeginTx(ctx, &sql.TxOptions{
+		Isolation: sql.LevelDefault,
+	})
 	if err != nil {
-		return fmt.Errorf("%w: executing statement: %w", ErrStmt, err)
+		return nil, fmt.Errorf("%w: %v", ErrTx, err)
 	}
-	return nil
-}
 
-func (s *StmtWriter) Close() error {
-	err := s.stmt.Close()
+	// This defer correctly captures the named return variable 'err'.
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+			panic(r)
+		} else if err != nil {
+			tx.Rollback()
+		}
+	}()
+
+	stmt, err := tx.PrepareContext(ctx, rawStmt)
 	if err != nil {
-		return fmt.Errorf("%w: insert statement closing: %w", ErrStmt, err)
+		return nil, fmt.Errorf("%w: %v", ErrPrepareStmt, err)
 	}
-	return nil
-}
+	defer stmt.Close()
 
-// RowProcessor is a callback function for processing a single database row.
-type RowProcessor func(rows *sql.Rows) error
-
-// StmtReader encapsulates a prepared statement for SELECT queries.
-type StmtReader struct {
-	stmt *sql.Stmt
-}
-
-// Query executes the prepared statement and processes each row using a callback.
-// The library handles the rows.Close() call, simplifying usage for the user.
-func (s *StmtReader) Query(ctx context.Context, processor RowProcessor, args ...any) error {
-	rows, err := s.stmt.QueryContext(ctx, args...)
-	if err != nil {
-		return fmt.Errorf("%w: executing query: %w", ErrStmt, err)
-	}
-	defer rows.Close() // The library is now responsible for closing rows.
-
-	if err := processor(rows); err != nil {
-		return fmt.Errorf("%w: row processing failed: %w", ErrStmt, err)
+	dataSet := []any{}
+	for _, data := range dataList {
+		d, err := rowWriter(ctx, tx, stmt, data)
+		if err != nil {
+			slog.Info(err.Error())
+			continue
+		}
+		dataSet = append(dataSet, d)
 	}
 
-	return rows.Err() // Check for any error that may have occurred during iteration.
-}
-
-func NewStmtReader(ctx context.Context, db *sql.DB, sqlStmt string) (StmtReader, error) {
-	stmt, err := db.PrepareContext(ctx, sqlStmt)
-	if err != nil {
-		return StmtReader{}, fmt.Errorf("%w: unable to prepare statement: %w", ErrStmt, err)
+	if err := tx.Commit(); err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrTx, err)
 	}
-	return StmtReader{
-		stmt: stmt,
-	}, nil
+
+	return dataSet, nil
 }

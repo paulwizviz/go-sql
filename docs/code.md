@@ -12,7 +12,8 @@ Here's a list of some of the most common relational databases and their popular 
 * **MySQL / MariaDB**:
   * `github.com/go-sql-driver/mysql`
 * **SQLite**:
-  * `github.com/mattn/go-sqlite3`
+  * `github.com/mattn/go-sqlite3` - C based.
+  * `modernc.org/sqlite` - CGO free.
 * **Microsoft SQL Server**:
   * `github.com/denisenkom/go-mssqldb`
 * **Oracle Database**:
@@ -38,7 +39,11 @@ This section describes techniques for coding SQL programming against SQLite.
 
 This [example](../examples/coding/sqlite/ex1/main.go) illustrate the process to instantiate a SQLite server, create table, inserting data, querying and dropping table.
 
-### Working Example 2: Mapping SQLite Data to Go Custom Type
+### Working Example 2: This demonstrates transactions
+
+This [example](../examples/coding/sqlite/ex2/main.go) illustrates a table with only Primary key and the process uses transactions to insert data commit.
+
+### Working Example 3: Mapping SQLite data to Go custom type
 
 This example is based on this logical schema.
 
@@ -50,4 +55,4 @@ The SQL specification of the schema are based on these files:
 * [Name ID Table](../internal/person/sql/sqlite/tbl_named_id.sql)
 * [Person Name ID Table](../internal/person/sql/sqlite/tbl_person_name_id.sql)
 
-The Go implementation is presented in [this Example](../examples/coding/sqlite/ex2/main.go)
+Here is [the implementation](../examples/coding/sqlite/ex3/main.go)

@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	createTableStmtStr = "CREATE TABLE IF NOT EXISTS lottery(ball1 INT, ball2 INT)"
-	insertStmtStr      = "INSERT INTO lottery (ball1, ball2) VALUES (?,?)"
-	selectStmtStr      = "SELECT * FROM lottery WHERE ball1=? AND ball2=?"
-	dropTableStmtStr   = "DROP TABLE lottery"
+	createTableSQL = "CREATE TABLE IF NOT EXISTS lottery(id INTEGER PRIMARY KEY, ball1 INTEGER, ball2 INTEGER)"
+	insertSQL      = "INSERT INTO lottery (ball1, ball2) VALUES (?,?)"
+	selectSQL      = "SELECT * FROM lottery WHERE ball1=? AND ball2=?"
+	dropTableSQL   = "DROP TABLE lottery"
 )
 
 func execInsertStmt(stmt *sql.Stmt, args []int) error {
@@ -41,13 +41,13 @@ func execSelectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 	}
 	defer rows.Close()
 
-	var ball1, ball2 int
+	var id, ball1, ball2 int
 	for rows.Next() {
-		err := rows.Scan(&ball1, &ball2)
+		err := rows.Scan(&id, &ball1, &ball2)
 		if err != nil {
 			log.Printf("Error: %v", err)
 		}
-		fmt.Println(ball1, ball2)
+		fmt.Println(id, ball1, ball2)
 	}
 	return nil
 }
@@ -61,12 +61,12 @@ func main() {
 	}
 
 	// Creating Tables
-	if _, err := db.Exec(createTableStmtStr); err != nil {
+	if _, err := db.Exec(createTableSQL); err != nil {
 		log.Fatalf("Create table error: %v", err)
 	}
 
 	// Create statement to insert into table
-	stmt1, err := db.Prepare(insertStmtStr)
+	stmt1, err := db.Prepare(insertSQL)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
@@ -77,13 +77,19 @@ func main() {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
+	// Execute Insert Statement to inset values
+	// 1 and 2 again
+	if err := execInsertStmt(stmt1, []int{1, 2}); err != nil {
+		log.Fatalf("Insert execution error: %v", err)
+	}
+
 	if err := stmt1.Close(); err != nil {
 		log.Fatal(err)
 	}
 
 	// Prepare query statment to select result when
 	// two values are matched
-	stmt2, err := db.Prepare(selectStmtStr)
+	stmt2, err := db.Prepare(selectSQL)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
@@ -98,7 +104,7 @@ func main() {
 	}
 
 	// Execute statement to drop tables
-	if _, err := db.Exec(dropTableStmtStr); err != nil {
+	if _, err := db.Exec(dropTableSQL); err != nil {
 		log.Fatalf("Drop table error: %v", err)
 	}
 }

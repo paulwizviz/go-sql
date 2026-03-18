@@ -1,38 +1,94 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"go-sql/internal/person"
 	"go-sql/internal/sqlops"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var (
+	createTblSQL = `CREATE TABLE IF NOT EXISTS t(id INTEGER PRIMARY KEY);`
+	insertTblSQL = `INSERT INTO t DEFAULT VALUES;`
+	selectAllSQL = `SELECT id FROM t;`
+)
+
 func main() {
-	// Instantiate SQLite DB in memory
+
 	db, err := sqlops.NewSQLiteMem()
 	if err != nil {
-		log.Fatalf("Connection error: %v", err)
+		log.Fatalf("Unable to get db connection: %v", err)
 	}
-	defer db.Close()
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
-	ctx := context.Background()
-
-	// SQLite create table
-	if err := person.SQLiteCreateTable(ctx, db); err != nil {
-		log.Fatalf("Create table error: %v", err)
-	}
-
-	if err := person.SQLiteInsertName(ctx, db); err != nil {
-		log.Fatalf("Insert name error: %v", err)
+	if _, err := db.Exec(createTblSQL); err != nil {
+		log.Fatalf("Unable to create table: %v", err)
 	}
 
-	pi, err := person.GetNames(ctx, db)
+	committed := false
+
+	txn, err := db.Begin()
 	if err != nil {
-		log.Fatalf("get names: %v", err)
+		log.Fatalf("Unable to start a transaction: %v", err)
 	}
 
-	fmt.Println(pi)
+	defer func() {
+		if !committed {
+			txn.Rollback()
+		}
+	}()
+
+	stmt, err := txn.Prepare(insertTblSQL)
+	if err != nil {
+		log.Fatalf("Unable to prepare statement: %v", err)
+	}
+	defer stmt.Close()
+
+	r, err := stmt.Exec()
+	if err != nil {
+		log.Fatalf("Unable to execute statement: %v", err)
+	}
+
+	id, err := r.LastInsertId()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("First transaction ", id)
+
+	r, err = stmt.Exec()
+	if err != nil {
+		log.Fatalf("Unable to execute statement: %v", err)
+	}
+
+	id, err = r.LastInsertId()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Second transaction ", id)
+
+	if err := txn.Commit(); err != nil {
+		log.Fatalf("Unable to commit transaction: %v", err)
+	}
+
+	committed = true
+
+	rows, err := db.Query(selectAllSQL)
+	if err != nil {
+		log.Fatalf("Unable to query: %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		if err := rows.Scan(&id); err != nil {
+			log.Fatal(err)
+		}
+		log.Println("Row id:", id)
+	}
+
 }
