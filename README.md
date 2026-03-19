@@ -6,19 +6,15 @@ The materials in this repository are contributed by the people listed in the [Co
 
 ## Topics
 
-* [SQL Statements](./docs/sql.md)
-* [Transactions](./docs/txn.md)
-* [Coding](./docs/code.md)
-* Data Migration
-  * [Goose](./docs/goose.md)
+- [SQL Statements](./docs/sql.md)
+- [Transactions](./docs/txn.md)
+- [Coding](./docs/coding.md)
+- Data Migration
+  - [Goose](./docs/goose.md)
 
-## Companion Project
+## Companion Projects
 
-The [companion project](https://github.com/paulwizviz/learn-sql) to support this project. Use the companion project to instantiate a Postgres server.
-
-## References
-
-* [Managing connections](https://go.dev/doc/database/manage-connections)
+The [learn sql](https://github.com/paulwizviz/learn-sql) to support this project. Use the companion project to instantiate a Postgres server.
 
 ## Disclaimer
 
