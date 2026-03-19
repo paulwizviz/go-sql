@@ -5,7 +5,7 @@ import (
 	"go-sql/internal/sqlops"
 	"log"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // Using Postgres driver for database/sql
 )
 
 func main() {

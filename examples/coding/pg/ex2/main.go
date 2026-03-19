@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	createTableStmtStr = "CREATE TABLE IF NOT EXISTS lottery(ball1 INT, ball2 INT)"
-	insertStmtStr      = "INSERT INTO lottery (ball1, ball2) VALUES ($1,$2)"
+	createTableStmtStr = "CREATE TABLE IF NOT EXISTS lottery(id SERIAL PRIMARY KEY, ball1 INT, ball2 INT)"
+	insertStmtStr      = "INSERT INTO lottery (ball1, ball2) VALUES ($1,$2) RETURNING id"
 	selectStmtStr      = "SELECT * FROM lottery WHERE ball1=$1 AND ball2=$2"
 	dropTableStmtStr   = "DROP TABLE lottery"
 )
@@ -21,15 +21,11 @@ func insertStatement(stmt *sql.Stmt, args []int) error {
 	if err != nil {
 		return err
 	}
-	id, err := r.LastInsertId()
+	row, err := r.RowsAffected()
 	if err != nil {
-		log.Printf("ID Error: %v", err)
+		return err
 	}
-	rows, err := r.RowsAffected()
-	if err != nil {
-		log.Printf("Rows Error: %v", err)
-	}
-	log.Printf("Last insert ID: %v Rows affected: %v", id, rows)
+	log.Printf("Rows affected: %v", row)
 	return nil
 }
 
@@ -40,13 +36,16 @@ func selectQuery(stmt *sql.Stmt, arg1, arg2 int) error {
 	}
 	defer rows.Close()
 
-	var ball1, ball2 int
+	var id, ball1, ball2 int
 	for rows.Next() {
-		err := rows.Scan(&ball1, &ball2)
+		err := rows.Scan(&id, &ball1, &ball2)
 		if err != nil {
 			log.Printf("Error: %v", err)
 		}
-		fmt.Println(ball1, ball2)
+		fmt.Println(id, ball1, ball2)
+	}
+	if err := rows.Err(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -73,32 +72,32 @@ func main() {
 
 	// STEP 3: Insert statement
 	// STEP 3a: Prepare insert statement
-	stmt1, err := db.Prepare(insertStmtStr)
+	insertStmt, err := db.Prepare(insertStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare insert stmt error: %v", err)
 	}
 
 	// STEP 3b: Execute insert statement
-	if err = insertStatement(stmt1, []int{1, 2}); err != nil {
+	if err = insertStatement(insertStmt, []int{1, 2}); err != nil {
 		log.Fatalf("Insert execution error: %v", err)
 	}
 
-	if err := stmt1.Close(); err != nil {
+	if err := insertStmt.Close(); err != nil {
 		log.Fatal(err)
 	}
 
 	// STEP 4: SELECT statement
 	// STEP 4a: Prepare select statement
-	stmt2, err := db.Prepare(selectStmtStr)
+	selectStmt, err := db.Prepare(selectStmtStr)
 	if err != nil {
 		log.Fatalf("Prepare select stmt error: %v", err)
 	}
 	// STEP 4b: Execute select statement
-	if err := selectQuery(stmt2, 1, 2); err != nil {
+	if err := selectQuery(selectStmt, 1, 2); err != nil {
 		log.Fatalf("Select query error: %v", err)
 	}
 
-	if err := stmt2.Close(); err != nil {
+	if err := selectStmt.Close(); err != nil {
 		log.Fatal(err)
 	}
 

@@ -67,10 +67,16 @@ With `database/sql` you're often converting everything to/from strings manually.
 
 ## Working Examples
 
+These examples uses [learn sql](https://github.com/paulwizviz/learn-sql) local deployment as deployed example.
+
 ### Example 1: Ping
 
-This [example](../examples/coding/pg/ex1/main.go) involves establishing a connection with a Postgres server and followed by a ping.
+This [example](../examples/coding/pg/ex1/main.go) involves establishing a connection with a PostgreSQL server and followed by a ping. In this case, the package `lib/pq` is used.
 
-### Example 2: Simple CRUD for Postgres
+### Example 2: Simple CRUD using lib/pq
 
-This [example](../examples/coding/pg/ex2/main.go) illustrate the process to create table, inserting data, querying and dropping table.
+This [example](../examples/coding/pg/ex2/main.go) illustrate the process to create table, inserting data, querying and dropping table. In this case, the package `lib/pq` is used.
+
+### Example 3: Simple CRUD using pgx
+
+This [example](../examples/coding/pg/ex3/main.go) is a reproduction of Example 2, but using the package `pgx`.
