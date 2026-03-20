@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log/slog"
 )
 
 var (
@@ -48,51 +47,4 @@ func CreateTableTx(ctx context.Context, db *sql.DB, creators ...TblCreatorTxFunc
 	// The return statement is simplified, returning the result of tx.Commit().
 	// This correctly handles and propagates the commit error.
 	return tx.Commit()
-}
-
-type RowWriterFunc func(context.Context, *sql.Tx, *sql.Stmt, any) (any, error)
-
-func Writer(ctx context.Context, db *sql.DB, rawStmt string, dataList []any, rowWriter RowWriterFunc) ([]any, error) {
-	if len(dataList) == 0 {
-		return nil, nil
-	}
-
-	tx, err := db.BeginTx(ctx, &sql.TxOptions{
-		Isolation: sql.LevelDefault,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrTx, err)
-	}
-
-	// This defer correctly captures the named return variable 'err'.
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-			panic(r)
-		} else if err != nil {
-			tx.Rollback()
-		}
-	}()
-
-	stmt, err := tx.PrepareContext(ctx, rawStmt)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrPrepareStmt, err)
-	}
-	defer stmt.Close()
-
-	dataSet := []any{}
-	for _, data := range dataList {
-		d, err := rowWriter(ctx, tx, stmt, data)
-		if err != nil {
-			slog.Info(err.Error())
-			continue
-		}
-		dataSet = append(dataSet, d)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrTx, err)
-	}
-
-	return dataSet, nil
 }

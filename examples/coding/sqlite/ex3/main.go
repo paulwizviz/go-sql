@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"go-sql/internal/sqlite/person"
 	"go-sql/internal/sqlops"
 	"log"
 
@@ -12,32 +13,35 @@ import (
 
 const showTables = "SELECT name FROM sqlite_master WHERE type='table';"
 
-func createTable(ctx context.Context, db *sql.DB) error {
-	if err := sqlops.CreateTableTx(ctx,
+func createTables(ctx context.Context, db *sql.DB) error {
+	if err := sqlops.CreateTableTx(
+		ctx,
 		db,
-		CreateTblPersonSQLFn,
-		CreateTblPNIFn,
-		CreateTblNameIdentifierSQLFn,
+		person.CreateTblPersonSQLFn,
+		person.CreateTblNameIDSQLFn,
+		person.CreateTblPNIFn,
 	); err != nil {
-		return err
+		return fmt.Errorf("Table creation error: %v", err)
 	}
 
-	rows, err := db.Query(showTables)
+	rows, err := db.QueryContext(ctx, showTables)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error querying tables: %v", err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
-		var tblName string
-		rows.Scan(&tblName)
-		log.Println(tblName)
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return fmt.Errorf("Error scanning table name: %v", err)
+		}
+		log.Printf("Table: %s", tableName)
 	}
 
+	if err := rows.Err(); err != nil {
+		return err
+	}
 	return nil
-}
-
-func writePerson(ctx context.Context, db *sql.DB, data []any) ([]any, error) {
-	return sqlops.Writer(ctx, db, createTblNameIdentifierSQL, data, InsertPersonFnc)
 }
 
 func main() {
@@ -49,12 +53,21 @@ func main() {
 	defer db.Close()
 
 	ctx := context.TODO()
-	p := Person{}
-	p1 := Person{}
-	createTable(ctx, db)
-	r, err := writePerson(ctx, db, []any{p, p1})
-	if err != nil {
-		log.Fatal(err)
+	if err := createTables(ctx, db); err != nil {
+		log.Fatalf("Error creating tables: %v", err)
 	}
-	fmt.Println(r)
+
+	// persist a person
+	personDetail, err := person.PersistPersonData(ctx, db, "John", "Doe", "Smith")
+	if err != nil {
+		log.Fatalf("Error persisting person data: %v", err)
+	}
+	log.Printf("Persisted person: %+v", personDetail)
+
+	personDetail, err = person.PersistPersonData(ctx, db, "Jane", "Doe", "Smith")
+	if err != nil {
+		log.Fatalf("Error persisting person data: %v", err)
+	}
+	log.Printf("Persisted person: %+v", personDetail)
+
 }

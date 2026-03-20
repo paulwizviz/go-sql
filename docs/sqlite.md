@@ -34,4 +34,4 @@ The SQL specification of the schema are based on these files:
 * [Name ID Table](../internal/person/sql/sqlite/tbl_named_id.sql)
 * [Person Name ID Table](../internal/person/sql/sqlite/tbl_person_name_id.sql)
 
-Here is [the implementation](../examples/coding/sqlite/ex3/main.go)
+Here is [the implementation](../examples/coding/sqlite/ex3/main.go).
