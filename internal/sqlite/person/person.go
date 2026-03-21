@@ -29,6 +29,9 @@ const (
 	colPNIID       = "id"
 	colPNINameID   = "name_identifier_id"
 	colPNIPersonID = "person_id"
+
+	// Person View
+	viewPerson = "person_view"
 )
 
 var (
@@ -74,6 +77,36 @@ var (
 
 	CreateTblPNIFn sqlops.TblCreatorTxFunc = func(ctx context.Context, tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, createTblPNISQL)
+		if err != nil {
+			return fmt.Errorf("%w: %v", ErrCreateTbl, err)
+		}
+		return nil
+	}
+
+	createViewPersonSQL = fmt.Sprintf(`CREATE VIEW IF NOT EXISTS %[1]s AS
+SELECT
+    p.%[2]s          AS %[2]s,
+    ni.%[3]s AS %[3]s,
+    ni.%[4]s AS %[4]s,
+    ni.%[5]s    AS %[5]s
+FROM %[6]s p
+JOIN %[7]s pni ON pni.%[8]s = p.%[2]s
+JOIN %[9]s ni         ON ni.%[10]s = pni.%[11]s;`,
+		viewPerson,        // 1
+		colPerID,          // 2
+		colNameIDFirst,    // 3
+		colNameIDMiddle,   // 4
+		colNameIDSurname,  // 5
+		tblPerson,         // 6
+		tblPNI,            // 7
+		colPNIPersonID,    // 8
+		tblNameIdentifier, // 9
+		colNameID,         // 10
+		colPNINameID,      // 11
+	)
+
+	CreateViewPersonSQLFn sqlops.TblCreatorTxFunc = func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, createViewPersonSQL)
 		if err != nil {
 			return fmt.Errorf("%w: %v", ErrCreateTbl, err)
 		}
